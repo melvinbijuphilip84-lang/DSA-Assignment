@@ -1,0 +1,155 @@
+#include <stdio.h>
+
+#define N 8
+
+/* ---------- Merge Sort ---------- */
+
+int mergeComparisons = 0;
+int mergePasses = 0;
+
+void printArray(int a[], int n)
+{
+    int i;
+    for (i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+}
+
+void merge(int a[], int low, int mid, int high)
+{
+    int temp[N];
+    int i = low, j = mid + 1, k = low;
+
+    while (i <= mid && j <= high)
+    {
+        mergeComparisons++;
+
+        if (a[i] <= a[j])
+            temp[k++] = a[i++];
+        else
+            temp[k++] = a[j++];
+    }
+
+    while (i <= mid)
+        temp[k++] = a[i++];
+
+    while (j <= high)
+        temp[k++] = a[j++];
+
+    for (i = low; i <= high; i++)
+        a[i] = temp[i];
+}
+
+void mergeSort(int a[], int low, int high)
+{
+    int mid;
+
+    if (low < high)
+    {
+        mid = (low + high) / 2;
+
+        mergeSort(a, low, mid);
+        mergeSort(a, mid + 1, high);
+
+        merge(a, low, mid, high);
+
+        mergePasses++;
+
+        printf("Merge pass %d: ", mergePasses);
+        printArray(a, N);
+    }
+}
+
+/* ---------- Quick Sort ---------- */
+
+int quickComparisons = 0;
+int quickPartitions = 0;
+
+int partition(int a[], int low, int high)
+{
+    int pivot = a[high];
+    int i = low - 1;
+    int j, temp;
+
+    for (j = low; j < high; j++)
+    {
+        quickComparisons++;
+
+        if (a[j] < pivot)
+        {
+            i++;
+
+            temp = a[i];
+            a[i] = a[j];
+            a[j] = temp;
+        }
+    }
+
+    temp = a[i + 1];
+    a[i + 1] = a[high];
+    a[high] = temp;
+
+    return i + 1;
+}
+
+void quickSort(int a[], int low, int high)
+{
+    int p;
+
+    if (low < high)
+    {
+        p = partition(a, low, high);
+
+        quickPartitions++;
+
+        printf("Partition %d (Pivot = %d): ", quickPartitions, a[p]);
+        printArray(a, N);
+
+        quickSort(a, low, p - 1);
+        quickSort(a, p + 1, high);
+    }
+}
+
+/* ---------- Main Function ---------- */
+
+int main()
+{
+    int original[N] = {324, 125, 456, 218, 102, 389, 275, 147};
+    int mergeArray[N], quickArray[N];
+    int i;
+
+    /* Copy original array */
+    for (i = 0; i < N; i++)
+    {
+        mergeArray[i] = original[i];
+        quickArray[i] = original[i];
+    }
+
+    /* Merge Sort */
+    printf("===== MERGE SORT =====\n");
+    printf("Original array: ");
+    printArray(mergeArray, N);
+
+    mergeSort(mergeArray, 0, N - 1);
+
+    printf("Final sorted array: ");
+    printArray(mergeArray, N);
+
+    printf("Number of merge passes: %d\n", mergePasses);
+    printf("Number of comparisons: %d\n\n", mergeComparisons);
+
+    /* Quick Sort */
+    printf("===== QUICK SORT =====\n");
+    printf("Original array: ");
+    printArray(quickArray, N);
+
+    quickSort(quickArray, 0, N - 1);
+
+    printf("Final sorted array: ");
+    printArray(quickArray, N);
+
+    printf("Number of partitions: %d\n", quickPartitions);
+    printf("Number of comparisons: %d\n", quickComparisons);
+
+    return 0;
+}
