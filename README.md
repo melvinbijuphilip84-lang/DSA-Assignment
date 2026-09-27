@@ -86,6 +86,4 @@ Melvin Biju Philip
 B.Tech – Artificial Intelligence and Data Science
 
 
-This version is **short, clean, and appropriate for a college GitHub assignment**.
 
-Available next action: :contentReference[oaicite:0]{index=0}
